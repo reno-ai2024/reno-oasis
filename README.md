@@ -32,8 +32,8 @@ so if you want create multiple providers you need to put multiple proxy there.
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/Zlkcyber/oasis-bot.git
-   cd oasis-bot
+   git clone https://github.com/reno-ai2024/reno-oasis.git
+   cd reno-oasis
    ```
 
 2. Install dependencies:
@@ -41,20 +41,25 @@ so if you want create multiple providers you need to put multiple proxy there.
    ```bash
    npm install
    ```
+   
+3. Install socks support
+   ```bash
+   npm install socks-proxy-agent
+   ```
 
-3. put your email and pass to `accounts.txt` format `email|password` 1 account for 1 line
+4. put your email and pass to `accounts.txt` format `email|password` 1 account for 1 line
 
    ```bash
    nano accounts.txt
    ```
 
-4. put your proxy to `proxy.txt`
+5. put your proxy to `proxy.txt`
 
    ```bash
    nano proxy.txt
    ```
 
-5. Setup to create accounts/login and get Tokens:
+6. Setup to create accounts/login and get Tokens:
 
    ```bash
    npm run setup
