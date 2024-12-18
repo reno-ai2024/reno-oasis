@@ -6,7 +6,7 @@ import { logger } from "./utils/logger.js";
 async function start() {
     showBanner();
     const tokens = await readToken("providers.txt");
-    const proxies = await readToken("proxy.txt"); // Proxies should be in the SOCKS5 format: socks5://127.0.0.1:1080
+    const proxies = await readToken("proxy.txt"); // 
 
     if (proxies.length < tokens.length) {
         logger("Not enough proxies for the number of Providers. Exiting...");
