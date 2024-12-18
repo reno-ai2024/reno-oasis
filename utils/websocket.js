@@ -1,5 +1,5 @@
 import WebSocket from "ws";
-import { HttpsProxyAgent } from "https-proxy-agent";
+import { SocksProxyAgent } from "socks-proxy-agent"; // Import SOCKS5 proxy agent
 import { generateRandomId, generateRandomSystemData } from "./system.js";
 import { delay } from "./file.js";
 import { logger } from "./logger.js";
@@ -7,14 +7,14 @@ import { logger } from "./logger.js";
 export async function createConnection(token, proxy = null) {
     const wsOptions = {};
     if (proxy) {
-        logger(`Connect Using proxy: ${proxy}`);
-        wsOptions.agent = new HttpsProxyAgent(proxy);
+        logger(`Connecting using SOCKS5 proxy: ${proxy}`);
+        wsOptions.agent = new SocksProxyAgent(proxy); // Use SOCKS5 proxy
     }
 
     const socket = new WebSocket(`wss://ws.oasis.ai/?token=${token}`, wsOptions);
 
     socket.on("open", async () => {
-        logger(`WebSocket connection established for providers: ${token}`, "", "success");
+        logger(`WebSocket connection established for provider: ${token}`, "", "success");
         const randomId = generateRandomId();
         const systemData = generateRandomSystemData();
 
@@ -72,7 +72,7 @@ export async function createConnection(token, proxy = null) {
         logger("WebSocket connection closed for token:", token, "warn");
         setTimeout(() => {
             logger("Attempting to reconnect for token:", token, "warn");
-            createConnection(token, proxy); 
+            createConnection(token, proxy); // Reconnect with the same proxy
         }, 5000);
     });
 
