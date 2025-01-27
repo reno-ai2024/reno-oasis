@@ -31,8 +31,8 @@ recommended use static proxy...
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/magsasaka-bot/ungasis-bot.git
-   cd ungasis-bot
+   git clone https://github.com/reno-ai2024/reno-oasis.git
+   cd reno-oasis
    ```
 
 2. Install dependencies:
