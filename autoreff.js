@@ -1,7 +1,7 @@
 import Mailjs from "@cemalgnlts/mailjs";
 import axios from "axios";
 import fs from 'fs';
-import { HttpsProxyAgent } from 'https-proxy-agent';
+import { SocksProxyAgent } from "socks-proxy-agent";
 import readline from "readline/promises";
 import { delay } from "./utils/file.js";
 import { logger } from "./utils/logger.js";
@@ -32,7 +32,7 @@ function readProxies(filePath) {
 }
 
 async function verifyEmail(code, proxy) {
-    const proxyAgent = new HttpsProxyAgent(proxy);
+    const proxyAgent = new SocksProxyAgent(proxy);
     const url = "https://api.oasis.ai/internal/authVerifyEmail?batch=1";
     const payload = {
         "0": {
@@ -97,7 +97,7 @@ async function checkForNewEmails(proxy) {
 
 // Send signup request
 async function sendSignupRequest(email, password, proxy, referralCode) {
-    const proxyAgent = new HttpsProxyAgent(proxy);
+    const proxyAgent = new SocksProxyAgent(proxy);
     const url = "https://api.oasis.ai/internal/authSignup?batch=1";
     const payload = {
         "0": {

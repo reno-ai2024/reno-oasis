@@ -23,17 +23,16 @@ AI inference powered by distributed compute
 
 - **NPM**: Ensure you have npm installed.
 
-put your proxy in file `proxy.txt` format `http://username:pass@ip:port` 1 proxy for 1 provider
-
-so if you want create multiple providers you need to put multiple proxy there.
+put your proxy in file `proxy.txt` format `socks5://username:pass@ip:port` 
+recommended use static proxy...
 
 ## Setup
 
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/reno-ai2024/reno-oasis.git
-   cd reno-oasis
+   git clone https://github.com/magsasaka-bot/ungasis-bot.git
+   cd ungasis-bot
    ```
 
 2. Install dependencies:
@@ -41,25 +40,20 @@ so if you want create multiple providers you need to put multiple proxy there.
    ```bash
    npm install
    ```
-   
-3. Install socks support
-   ```bash
-   npm install socks-proxy-agent
-   ```
 
-4. put your email and pass to `accounts.txt` format `email|password` 1 account for 1 line
+3. put your email and pass to `accounts.txt` format `email|password` 1 account for 1 line
 
    ```bash
    nano accounts.txt
    ```
 
-5. put your proxy to `proxy.txt`
+4. put your proxy to `proxy.txt`
 
    ```bash
    nano proxy.txt
    ```
 
-6. Setup to create accounts/login and get Tokens:
+5. Setup to create accounts/login and get Tokens:
 
    ```bash
    npm run setup
@@ -69,11 +63,6 @@ so if you want create multiple providers you need to put multiple proxy there.
 
    ```bash
    npm run start
-   ```
-
-7. Additional feature auto refferal
-   ```bash
-   npm run autoreff
    ```
 
 ## ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)

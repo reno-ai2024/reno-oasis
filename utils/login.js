@@ -1,86 +1,71 @@
-import axios from "axios";
-import { SocksProxyAgent } from "socks-proxy-agent"; // Import SOCKS5 proxy agent
-import { readAccounts, saveToken } from "./file.js";
-import { logger } from "./logger.js";
+import axios from 'axios';
+import { readAccounts, saveToken } from './file.js';
+import { logger } from './logger.js';
 
-async function makeAxiosRequest(url, payload, proxy, headers) {
-    const agent = proxy ? new SocksProxyAgent(proxy) : undefined; // Configure SOCKS5 proxy
-    return axios.post(url, payload, {
-        headers,
-        httpAgent: agent,
-        httpsAgent: agent, // Support HTTPS
-    });
-}
-
-async function registerUser(email, password, proxy = null) {
-    const url = "https://api.oasis.ai/internal/authSignup?batch=1";
+// Function to register user
+async function registerUser(email, password) {
+    const url = 'https://api.oasis.ai/internal/auth/signup';
     const payload = {
-        "0": {
-            "json": {
-                email: email,
-                password: password,
-                referralCode: "zlketh",
-            },
-        },
+        email: email,
+        password: password,
+        referralCode: "zlketh"
+    }
+    const headers = {
+        'Content-Type': 'application/json',
     };
-    const headers = { "Content-Type": "application/json" };
 
     try {
-        const response = await makeAxiosRequest(url, payload, proxy, headers);
-        if (response.data[0].result) {
-            logger("Register successful:", email);
-            logger("Check your inbox for the verification email");
+        const response = await axios.post(url, payload, { headers });
+        if (response.data) {
+            logger('register successful:', email);
+            logger('Check Your inbox for verification email');
             return true;
         }
     } catch (error) {
-        logger(`Register error for ${email}:`, error.response ? error.response.data[0] : error.response.statusText, "error");
+        logger(`register error for ${email}:`, error.response ? error.response.data[0] : error.response.statusText, 'error');
         return null;
     }
 }
-
-async function loginUser(email, password, proxy = null) {
-    const url = "https://api.oasis.ai/internal/authLogin?batch=1";
+// Function to login a user
+async function loginUser(email, password) {
+    const url = 'https://api.oasis.ai/internal/auth/login';
     const payload = {
-        "0": {
-            "json": {
-                email: email,
-                password: password,
-                rememberSession: true,
-            },
-        },
+        email,
+        password,
+        rememberSession: true
+    }
+
+    const headers = {
+        'Content-Type': 'application/json',
     };
-    const headers = { "Content-Type": "application/json" };
 
     try {
-        const response = await makeAxiosRequest(url, payload, proxy, headers);
-        logger("Login successful:", email);
-        return response.data[0].result.data.json.token;
+        const response = await axios.post(url, payload, { headers });
+        logger('Login successful:', email);
+        return response.data.token;
     } catch (error) {
-        logger(`Login error for ${email}:`, error.response ? error.response.data[0] : error.response.statusText, "error");
-        logger("Please check your inbox to verify your email", email, "error");
+        logger(`Login error for ${email}:`, error.response ? error.response.data[0] : error.response.statusText, 'error');
+        logger('Please Check Your inbox to verification your email', email, 'error');
         return null;
     }
 }
 
+// Main function
 export async function loginFromFile(filePath) {
     try {
         const accounts = await readAccounts(filePath);
-        const proxies = await readAccounts("proxy.txt"); // Load proxies from file
         let successCount = 0;
 
-        for (let i = 0; i < accounts.length; i++) {
-            const account = accounts[i];
-            const proxy = proxies[i] || null;
-
-            logger(`Attempting login for ${account.email} using proxy ${proxy}`);
-            const token = await loginUser(account.email, account.password, proxy);
-
+        logger(`Trying to login and get token to all accounts...`)
+        for (const account of accounts) {
+            logger(`Attempting login for ${account.email}`);
+            const token = await loginUser(account.email, account.password);
             if (token) {
-                saveToken("tokens.txt", token);
+                saveToken('tokens.txt', token);
                 successCount++;
             } else {
-                logger(`Attempting to register ${account.email} using proxy ${proxy}`);
-                await registerUser(account.email, account.password, proxy);
+                logger(`Attempting Register for ${account.email}`);
+                await registerUser(account.email, account.password);
             }
         }
 
